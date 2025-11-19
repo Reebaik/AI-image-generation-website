@@ -1,0 +1,18 @@
+ Ignore all env files
+.env
+*/.env
+Backend/.env
+
+# Node modules
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Logs
+*.log
+
+# OS files
+Thumbs.db
+.DS_Store

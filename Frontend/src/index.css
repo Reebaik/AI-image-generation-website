@@ -1,0 +1,1037 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles below */
+@layer base {
+  body {
+    @apply bg-black text-white min-h-screen;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/5 backdrop-blur-md border border-white/10;
+  }
+}
+
+/* Custom animations */
+@keyframes float-up {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+  100% { transform: translateY(0px); }
+}
+
+.float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Gradient Animation */
+.animate-gradient {
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-900;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gradient-to-b from-red-600 to-red-900 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gradient-to-b from-red-500 to-red-800;
+}
+
+/* Custom grid pattern */
+.bg-grid-pattern {
+  background-size: 50px 50px;
+  background-image: 
+    linear-gradient(to right, rgba(220, 38, 38, 0.8) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(220, 38, 38, 0.8) 1px, transparent 1px);
+  animation: grid-pulse 6s ease-in-out infinite;
+}
+
+@keyframes grid-pulse {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Glowing text effect */
+.glow-text {
+  text-shadow: 0 0 10px rgba(147, 51, 234, 0.5),
+               0 0 20px rgba(147, 51, 234, 0.3),
+               0 0 30px rgba(147, 51, 234, 0.2);
+}
+
+/* Gradient text animation */
+.animate-gradient-text {
+  background: linear-gradient(to right, #9333ea, #db2777, #9333ea);
+  background-size: 200% auto;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: gradient 3s linear infinite;
+}
+
+@keyframes gradient {
+  to {
+    background-position: 200% center;
+  }
+}
+
+/* Hover card effect */
+.hover-card {
+  transition: all 0.3s ease;
+}
+
+.hover-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px -5px rgba(147, 51, 234, 0.3);
+}
+
+/* Loading animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Custom selection color */
+::selection {
+  background: rgba(147, 51, 234, 0.3);
+  color: white;
+}
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --bg-primary: #000000;
+  --bg-secondary: rgba(0, 0, 0, 0.7);
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --border-color: rgba(220, 38, 38, 0.3);
+  --border-hover: rgba(220, 38, 38, 0.4);
+  --input-bg: rgba(0, 0, 0, 0.5);
+  --shadow-color: rgba(220, 38, 38, 0.15);
+  --accent-color: rgb(220, 38, 38);
+  --accent-hover: rgb(239, 68, 68);
+}
+
+:root:not(.dark-theme) {
+  --bg-primary: #f0f9ff;
+  --bg-secondary: rgba(255, 255, 255, 0.98);
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --border-color: rgba(79, 70, 229, 0.25);
+  --border-hover: rgba(124, 58, 237, 0.4);
+  --input-bg: rgba(248, 250, 252, 0.9);
+  --shadow-color: rgba(79, 70, 229, 0.15);
+  --accent-color: rgb(124, 58, 237);
+  --accent-hover: rgb(139, 92, 246);
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.bg-black {
+  background-color: var(--bg-primary) !important;
+}
+
+.bg-black\/70 {
+  background-color: var(--bg-secondary) !important;
+}
+
+.text-white {
+  color: var(--text-primary) !important;
+}
+
+.text-gray-400 {
+  color: var(--text-secondary) !important;
+}
+
+.border-red-900\/30 {
+  border-color: var(--border-color) !important;
+}
+
+.hover\:border-red-600\/40:hover {
+  border-color: var(--border-hover) !important;
+}
+
+.bg-black\/50 {
+  background-color: var(--input-bg) !important;
+}
+
+.hover\:shadow-\[0_0_50px_rgba\(220\,38\,38\,0\.15\)\]:hover {
+  box-shadow: 0 0 50px var(--shadow-color) !important;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+
+/* SVG Icon Animation */
+@keyframes icon-glow {
+  0% {
+    filter: drop-shadow(0 0 2px rgba(239, 68, 68, 0.4))
+           drop-shadow(0 0 4px rgba(220, 38, 38, 0.2));
+    color: rgb(239, 68, 68);
+  }
+  50% {
+    filter: drop-shadow(0 0 4px rgba(239, 68, 68, 0.6))
+           drop-shadow(0 0 8px rgba(220, 38, 38, 0.4));
+    color: rgb(220, 38, 38);
+  }
+  100% {
+    filter: drop-shadow(0 0 2px rgba(239, 68, 68, 0.4))
+           drop-shadow(0 0 4px rgba(220, 38, 38, 0.2));
+    color: rgb(239, 68, 68);
+  }
+}
+
+.animate-icon-glow {
+  animation: icon-glow 3s ease-in-out infinite;
+}
+
+/* Alternative pattern for Ready to Create box */
+.bg-dots-pattern {
+  background-image: radial-gradient(rgba(220, 38, 38, 0.8) 1px, transparent 1px);
+  background-size: 20px 20px;
+  animation: dots-pulse 6s ease-in-out infinite;
+}
+
+@keyframes dots-pulse {
+  0% {
+    opacity: 0;
+    background-size: 15px 15px;
+  }
+  25% {
+    opacity: 1;
+    background-size: 20px 20px;
+  }
+  75% {
+    opacity: 1;
+    background-size: 20px 20px;
+  }
+  100% {
+    opacity: 0;
+    background-size: 15px 15px;
+  }
+}
+
+/* Diagonal lines pattern alternative */
+.bg-diagonal-pattern {
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(220, 38, 38, 0.8) 0px,
+    rgba(220, 38, 38, 0.8) 1px,
+    transparent 1px,
+    transparent 20px
+  );
+  animation: diagonal-pulse 6s ease-in-out infinite;
+}
+
+@keyframes diagonal-pulse {
+  0% {
+    opacity: 0;
+    background-position: 0 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    background-position: 40px 40px;
+  }
+}
+
+/* Custom scrollbar for image container */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(239, 68, 68, 0.6);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(239, 68, 68, 0.8);
+}
+
+/* Firefox scrollbar */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(239, 68, 68, 0.6) rgba(0, 0, 0, 0.2);
+}
+
+/* Alternative gradient for light mode */
+:root:not(.dark-theme) .animate-gradient-text {
+  background: linear-gradient(to right, #4f46e5, #7c3aed, #a855f7);
+  background-size: 200% auto;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: gradient 3s linear infinite;
+  text-shadow: none;
+}
+
+/* Light mode specific button styling */
+:root:not(.dark-theme) button.bg-red-600 {
+  background-color: linear-gradient(to right, #2563eb, #1d4ed8) !important;
+}
+
+:root:not(.dark-theme) button.hover\:bg-red-700:hover {
+  background-color: linear-gradient(to right, #3b82f6, #1e40af) !important;
+}
+
+/* Light mode card styling - adding subtle shadows for depth */
+:root:not(.dark-theme) .bg-black\/70 {
+  box-shadow: 0 4px 20px rgba(37, 99, 235, 0.1) !important;
+}
+
+/* Light mode input focus state */
+:root:not(.dark-theme) .focus\:border-red-600\/50:focus {
+  border-color: rgba(59, 130, 246, 0.5) !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Light mode grid pattern */
+:root:not(.dark-theme) .bg-grid-pattern {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(124, 58, 237, 0.15) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(124, 58, 237, 0.15) 1px, transparent 1px) !important;
+  animation: grid-pulse 6s ease-in-out infinite;
+  opacity: 0.8 !important;
+}
+
+/* Light mode scrollbar */
+:root:not(.dark-theme) .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #6366f1, #8b5cf6) !important;
+}
+
+:root:not(.dark-theme) .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(124, 58, 237, 0.5) !important;
+}
+
+:root:not(.dark-theme) .custom-scrollbar {
+  scrollbar-color: rgba(59, 130, 246, 0.6) rgba(240, 249, 255, 0.8) !important;
+}
+
+/* Light mode nav styling */
+:root:not(.dark-theme) nav.bg-gradient-to-b {
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85)) !important;
+  backdrop-filter: blur(10px) !important;
+  border-bottom: 1px solid rgba(124, 58, 237, 0.2) !important;
+  box-shadow: 0 4px 15px rgba(15, 23, 42, 0.04) !important;
+}
+
+/* Light mode accent line styling */
+:root:not(.dark-theme) .bg-gradient-to-b.from-transparent.via-red-500\/10 {
+  background: linear-gradient(to bottom, transparent, rgba(59, 130, 246, 0.1), transparent) !important;
+}
+
+/* Light mode border glow */
+:root:not(.dark-theme) .bg-gradient-to-r.from-transparent.via-red-500\/50 {
+  background: linear-gradient(to right, transparent, rgba(59, 130, 246, 0.25), transparent) !important;
+}
+
+:root:not(.dark-theme) .bg-gradient-to-r.from-transparent.via-red-600\/20 {
+  background: linear-gradient(to right, transparent, rgba(37, 99, 235, 0.15), transparent) !important;
+}
+
+/* Light mode error/success message styling */
+:root:not(.dark-theme) .bg-red-500\/10 {
+  background-color: rgba(220, 38, 38, 0.05) !important;
+  border-color: rgba(220, 38, 38, 0.2) !important;
+}
+
+:root:not(.dark-theme) .bg-green-500\/10 {
+  background-color: rgba(34, 197, 94, 0.05) !important;
+  border-color: rgba(34, 197, 94, 0.2) !important;
+}
+
+:root:not(.dark-theme) .text-red-500 {
+  color: #2563eb !important;
+}
+
+:root:not(.dark-theme) .text-green-500 {
+  color: #15803d !important;
+}
+
+/* Light mode form elements */
+:root:not(.dark-theme) input::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Light mode text styling */
+:root:not(.dark-theme) .animate-gradient-text {
+  text-shadow: 0 1px 2px rgba(59, 130, 246, 0.1);
+}
+
+/* Light mode background adjustments */
+:root:not(.dark-theme) .bg-black {
+  background-color: var(--bg-primary) !important;
+}
+
+/* Card and form styling */
+:root:not(.dark-theme) .hover\:shadow-red-600\/50:hover {
+  box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.2) !important;
+}
+
+:root:not(.dark-theme) .bg-gradient-to-r.from-red-600.to-red-700 {
+  background: linear-gradient(to right, #2563eb, #1d4ed8) !important;
+}
+
+:root:not(.dark-theme) .hover\:from-red-500.hover\:to-red-700:hover {
+  background: linear-gradient(to right, #3b82f6, #1e40af) !important;
+}
+
+/* Button hover states */
+:root:not(.dark-theme) .hover\:bg-red-600\/30:hover {
+  background-color: rgba(59, 130, 246, 0.3) !important;
+}
+
+/* Background overlay */
+:root:not(.dark-theme) .bg-black\/90 {
+  background-color: rgba(248, 250, 252, 0.97) !important;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Modal background */
+:root:not(.dark-theme) .bg-zinc-900 {
+  background-color: #ffffff !important;
+  border-color: rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Update card hover effect for light theme */
+:root:not(.dark-theme) .hover-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px -5px rgba(59, 130, 246, 0.2);
+}
+
+/* Light mode specific background improvements */
+:root:not(.dark-theme) .bg-black\/90 {
+  background-color: rgba(248, 250, 252, 0.97) !important;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05) !important;
+}
+
+:root:not(.dark-theme) .bg-zinc-900 {
+  background-color: #ffffff !important;
+  border-color: rgba(59, 130, 246, 0.2) !important;
+}
+
+:root:not(.dark-theme) .bg-grid-pattern {
+  background-image: 
+    linear-gradient(to right, rgba(59, 130, 246, 0.3) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(59, 130, 246, 0.3) 1px, transparent 1px) !important;
+  animation: grid-pulse 6s ease-in-out infinite;
+  opacity: 0.7 !important;
+}
+
+/* Light mode form elements */
+:root:not(.dark-theme) input::placeholder {
+  color: #94a3b8 !important;
+}
+
+:root:not(.dark-theme) .focus\:border-red-600\/50:focus {
+  border-color: rgba(59, 130, 246, 0.5) !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Light mode text styling improvements */
+:root:not(.dark-theme) .text-red-500 {
+  color: #2563eb !important;
+}
+
+:root:not(.dark-theme) .text-green-500 {
+  color: #15803d !important;
+}
+
+:root:not(.dark-theme) label, 
+:root:not(.dark-theme) .text-gray-400 {
+  color: #64748b !important;
+}
+
+:root:not(.dark-theme) .peer-focus\:text-red-500 {
+  color: #2563eb !important;
+}
+
+/* Remove harsh shadows in light mode */
+:root:not(.dark-theme) .shadow-lg {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Light mode navigation */
+:root:not(.dark-theme) nav.bg-gradient-to-b.from-black {
+  background: linear-gradient(to bottom, #ffffff, #f8fafc) !important;
+}
+
+:root:not(.dark-theme) .bg-gradient-to-r.from-transparent.via-red-500\/50 {
+  background: linear-gradient(to right, transparent, rgba(59, 130, 246, 0.25), transparent) !important;
+}
+
+:root:not(.dark-theme) .bg-gradient-to-r.from-transparent.via-red-600\/20 {
+  background: linear-gradient(to right, transparent, rgba(37, 99, 235, 0.15), transparent) !important;
+}
+
+/* Light mode accent lines */
+:root:not(.dark-theme) .bg-gradient-to-b.from-transparent.via-red-500\/10 {
+  background: linear-gradient(to bottom, transparent, rgba(59, 130, 246, 0.1), transparent) !important;
+}
+
+/* Light mode button improvements */
+:root:not(.dark-theme) button.bg-red-600,
+:root:not(.dark-theme) .bg-gradient-to-r.from-red-600.to-red-700 {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed) !important;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25) !important;
+  border: none !important;
+}
+
+:root:not(.dark-theme) button.hover\:bg-red-700:hover,
+:root:not(.dark-theme) .hover\:from-red-500.hover\:to-red-700:hover {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+  box-shadow: 0 6px 18px rgba(124, 58, 237, 0.35) !important;
+}
+
+:root:not(.dark-theme) .hover\:shadow-red-600\/50:hover {
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.25) !important;
+  transition: all 0.3s ease;
+}
+
+/* Improve Google button text color */
+:root:not(.dark-theme) .bg-white {
+  color: #334155 !important;
+}
+
+/* Light mode card styling - better backgrounds and shadows */
+:root:not(.dark-theme) .bg-black\/70, 
+:root:not(.dark-theme) .bg-black\/50 {
+  background-color: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(12px) !important;
+  box-shadow: 
+    0 8px 20px rgba(15, 23, 42, 0.08),
+    0 1px 2px rgba(15, 23, 42, 0.05) !important;
+  border: 1px solid rgba(124, 58, 237, 0.2) !important;
+}
+
+/* Light mode form field improvements */
+:root:not(.dark-theme) input {
+  color: #334155 !important;
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  border-color: rgba(124, 58, 237, 0.2) !important;
+  transition: all 0.3s ease !important;
+}
+
+:root:not(.dark-theme) input:focus {
+  border-color: rgba(124, 58, 237, 0.5) !important;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15) !important;
+  background-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Light mode button text */
+:root:not(.dark-theme) button.bg-red-600,
+:root:not(.dark-theme) .bg-gradient-to-r.from-red-600 {
+  color: #ffffff !important;
+}
+
+/* Light mode headings - improve visibility */
+:root:not(.dark-theme) h2.text-3xl,
+:root:not(.dark-theme) h1.text-6xl {
+  color: #0f172a !important; 
+  text-shadow: none !important;
+}
+
+/* Fix any potential contrast issues */
+:root:not(.dark-theme) p,
+:root:not(.dark-theme) li,
+:root:not(.dark-theme) span:not(.animate-gradient-text) {
+  color: #334155 !important;
+}
+
+/* Fix modal and dropdown menus */
+:root:not(.dark-theme) .absolute.bg-zinc-900,
+:root:not(.dark-theme) .absolute.bg-gray-900 {
+  background-color: #ffffff !important;
+  border-color: rgba(59, 130, 246, 0.15) !important;
+}
+
+/* Override any odd color assignments */
+:root:not(.dark-theme) .text-yellow-400,
+:root:not(.dark-theme) .text-blue-400 {
+  color: #2563eb !important;
+}
+
+/* Improve scrollbar for light mode */
+:root:not(.dark-theme) ::-webkit-scrollbar-track {
+  background-color: #f1f5f9 !important;
+}
+
+:root:not(.dark-theme) ::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #3b82f6, #1e40af) !important;
+}
+
+/* Fix checkbox colors */
+:root:not(.dark-theme) .peer-checked\:bg-red-500 {
+  background-color: #2563eb !important;
+}
+
+/* Light mode dots pattern with the same animation speed as dark mode */
+:root:not(.dark-theme) .bg-dots-pattern {
+  background-image: radial-gradient(rgba(59, 130, 246, 0.3) 1px, transparent 1px) !important;
+  background-size: 20px 20px;
+  animation: dots-pulse 6s ease-in-out infinite;
+}
+
+/* Light mode diagonal pattern with the same animation speed */
+:root:not(.dark-theme) .bg-diagonal-pattern {
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(59, 130, 246, 0.3) 0px,
+    rgba(59, 130, 246, 0.3) 1px,
+    transparent 1px,
+    transparent 20px
+  ) !important;
+  animation: diagonal-pulse 6s ease-in-out infinite;
+}
+
+/* Light mode animation for gradient text to match dark mode */
+:root:not(.dark-theme) .animate-gradient-text {
+  background: linear-gradient(to right, #4f46e5, #7c3aed, #a855f7);
+  background-size: 200% auto;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: gradient 3s linear infinite;
+  text-shadow: none;
+}
+
+/* Light mode floating particles animation */
+:root:not(.dark-theme) .absolute.w-1.h-1.bg-red-500\/20 {
+  background-color: rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Light mode animated accent lines - same animation speed and contrast */
+:root:not(.dark-theme) .animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Light mode hover-card same animation speed */
+:root:not(.dark-theme) .hover-card {
+  transition: all 0.3s ease;
+}
+
+:root:not(.dark-theme) .hover-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px -5px rgba(59, 130, 246, 0.2);
+}
+
+/* Matching icon glow animation between modes */
+:root:not(.dark-theme) .animate-icon-glow {
+  animation: purple-icon-glow 3s ease-in-out infinite;
+}
+
+@keyframes purple-icon-glow {
+  0% {
+    filter: drop-shadow(0 0 2px rgba(124, 58, 237, 0.5))
+           drop-shadow(0 0 4px rgba(139, 92, 246, 0.3));
+    color: rgb(124, 58, 237);
+  }
+  50% {
+    filter: drop-shadow(0 0 5px rgba(124, 58, 237, 0.7))
+           drop-shadow(0 0 10px rgba(139, 92, 246, 0.5));
+    color: rgb(139, 92, 246);
+  }
+  100% {
+    filter: drop-shadow(0 0 2px rgba(124, 58, 237, 0.5))
+           drop-shadow(0 0 4px rgba(139, 92, 246, 0.3));
+    color: rgb(124, 58, 237);
+  }
+}
+
+/* Enhance color contrast for better visibility */
+:root:not(.dark-theme) .text-red-500, 
+:root:not(.dark-theme) .text-red-600, 
+:root:not(.dark-theme) .text-red-700 {
+  color: #2563eb !important;
+}
+
+/* Add same button hover animations */
+:root:not(.dark-theme) .group-hover\:rotate-12 {
+  transition: transform 0.3s ease;
+}
+
+/* Fix navbar border glow to match dark mode animation */
+:root:not(.dark-theme) nav .absolute.bottom-0.left-0.right-0.h-px {
+  opacity: 1 !important;
+}
+
+/* Fix floating particles for light mode */
+:root:not(.dark-theme) #particles-container {
+  opacity: 0.7 !important;
+}
+
+/* Fix glow effects for light mode */
+:root:not(.dark-theme) .shadow-red-600\/20 {
+  box-shadow: 0 5px 15px rgba(59, 130, 246, 0.15) !important;
+}
+
+:root:not(.dark-theme) .hover\:shadow-red-600\/50:hover {
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.25) !important;
+  transition: all 0.3s ease;
+}
+
+/* Ensure all animations have the same timing */
+:root:not(.dark-theme) .transition-all {
+  transition-duration: 0.3s !important;
+}
+
+:root:not(.dark-theme) .delay-300 {
+  transition-delay: 300ms !important;
+}
+
+/* Match animations for floating elements */
+:root:not(.dark-theme) .float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Make card backgrounds and containers match dark mode style */
+:root:not(.dark-theme) .glass {
+  background-color: rgba(255, 255, 255, 0.75) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(59, 130, 246, 0.15) !important;
+}
+
+:root:not(.dark-theme) .backdrop-blur-md {
+  backdrop-filter: blur(12px) !important;
+}
+
+/* Match dark mode animations for loading indicators */
+:root:not(.dark-theme) .animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Match dark mode border glows */
+:root:not(.dark-theme) .border-red-900\/20 {
+  border-color: rgba(59, 130, 246, 0.2) !important;
+}
+
+:root:not(.dark-theme) .hover\:border-red-500\/50:hover {
+  border-color: rgba(59, 130, 246, 0.5) !important;
+  transition: border-color 0.3s ease;
+}
+
+/* Ensure same hover transitions */
+:root:not(.dark-theme) .hover\:scale-\[1\.01\]:hover {
+  transform: scale(1.01) !important;
+  transition: transform 0.3s ease !important;
+}
+
+:root:not(.dark-theme) .hover\:scale-105:hover,
+:root:not(.dark-theme) .hover\:scale-110:hover {
+  transition: transform 0.3s ease !important;
+}
+
+/* Match dark mode selection color */
+:root:not(.dark-theme) ::selection {
+  background: rgba(59, 130, 246, 0.2) !important;
+  color: #0f172a !important;
+}
+
+/* Fix button highlight effects */
+:root:not(.dark-theme) .bg-red-600\/20 {
+  background-color: rgba(59, 130, 246, 0.2) !important;
+}
+
+:root:not(.dark-theme) .hover\:bg-red-600\/30:hover {
+  background-color: rgba(59, 130, 246, 0.3) !important;
+  transition: background-color 0.3s ease;
+}
+
+/* Animate gradient borders the same way */
+:root:not(.dark-theme) .animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite !important;
+}
+
+/* Enhance gradient backgrounds for light mode */
+:root:not(.dark-theme) .bg-gradient-to-b.from-black.via-black\/95.to-black\/80 {
+  background: linear-gradient(to bottom, #ffffff, rgba(248, 250, 252, 0.97), rgba(248, 250, 252, 0.95)) !important;
+}
+
+/* Match footer and separation line animations */
+:root:not(.dark-theme) .animate-gradient {
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite !important;
+}
+
+/* Fix main content animations and transitions */
+:root:not(.dark-theme) .animate-fade-in {
+  animation: fade-in 0.3s ease-out forwards !important;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fix button animations */
+:root:not(.dark-theme) .group-hover\:translate-y-1 {
+  transition: transform 0.3s ease !important;
+}
+
+/* Fix card borders and glows */
+:root:not(.dark-theme) .border-red-900\/30 {
+  border-color: rgba(59, 130, 246, 0.2) !important;
+}
+
+:root:not(.dark-theme) .hover\:border-red-600\/40:hover {
+  border-color: rgba(59, 130, 246, 0.4) !important;
+  transition: border-color 0.3s ease;
+}
+
+/* Match any transform skews and patterns */
+:root:not(.dark-theme) .transform.skew-x-12 {
+  transform: skewX(12deg) !important;
+}
+
+:root:not(.dark-theme) .transform.-skew-x-12 {
+  transform: skewX(-12deg) !important;
+}
+
+/* Fix card decorative effects */
+:root:not(.dark-theme) .absolute.inset-0.bg-gradient-to-r.from-red-600\/20.to-red-900\/20 {
+  background: linear-gradient(to right, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.1)) !important;
+}
+
+/* Fix scroll indicator animations */
+:root:not(.dark-theme) .bg-gradient-to-r.from-red-500.to-red-700 {
+  background: linear-gradient(to right, #2563eb, #1d4ed8) !important;
+  transition: width 0.3s ease;
+}
+
+/* Fix particle container animations */
+:root:not(.dark-theme) .absolute.w-1.h-1.bg-red-500\/20.rounded-full {
+  background-color: rgba(59, 130, 246, 0.2) !important;
+  animation: float-up 5s linear forwards !important;
+}
+
+/* Make dark mode animations and light mode the same speed */
+:root:not(.dark-theme) .duration-300 {
+  transition-duration: 300ms !important;
+}
+
+/* Add subtle pattern to light mode background for more visual interest */
+:root:not(.dark-theme) body {
+  background-color: #f0f9ff !important;
+  background-image: 
+    radial-gradient(circle at 20% 30%, rgba(167, 139, 250, 0.1) 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(124, 58, 237, 0.08) 0%, transparent 30%);
+}
+
+/* Light mode form field focus states */
+:root:not(.dark-theme) input:focus {
+  border-color: rgba(59, 130, 246, 0.5) !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+:root:not(.dark-theme) .peer-focus\:text-red-500 {
+  color: #2563eb !important;
+}
+
+/* Override color in text indicators */
+:root:not(.dark-theme) .text-red-500, 
+:root:not(.dark-theme) .text-red-600, 
+:root:not(.dark-theme) .text-red-700 {
+  color: #2563eb !important;
+}
+
+:root:not(.dark-theme) .text-yellow-400 {
+  color: #3b82f6 !important;
+}
+
+:root:not(.dark-theme) .text-blue-400 {
+  color: #60a5fa !important;
+}
+
+/* Add subtle gradient border effects */
+:root:not(.dark-theme) .border-red-900\/30 {
+  border-color: rgba(59, 130, 246, 0.2) !important;
+}
+
+:root:not(.dark-theme) .hover\:border-red-600\/40:hover {
+  border-color: rgba(37, 99, 235, 0.4) !important;
+  transition: border-color 0.3s ease;
+}
+
+:root:not(.dark-theme) .hover\:border-red-500\/40:hover {
+  border-color: rgba(59, 130, 246, 0.4) !important;
+}
+
+/* Enhanced light mode accent lines */
+:root:not(.dark-theme) .bg-gradient-to-r.from-transparent.via-red-500\/50 {
+  background: linear-gradient(to right, transparent, rgba(59, 130, 246, 0.25), transparent) !important;
+}
+
+:root:not(.dark-theme) .bg-gradient-to-r.from-transparent.via-red-600\/20 {
+  background: linear-gradient(to right, transparent, rgba(37, 99, 235, 0.15), transparent) !important;
+}
+
+:root:not(.dark-theme) .bg-gradient-to-b.from-transparent.via-red-500\/10 {
+  background: linear-gradient(to bottom, transparent, rgba(59, 130, 246, 0.1), transparent) !important;
+}
+
+/* Add more dramatic gradient for buttons */
+:root:not(.dark-theme) .hover\:shadow-red-600\/50:hover {
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.25) !important;
+  transition: all 0.3s ease;
+}
+
+/* Add subtle animations to light mode components */
+:root:not(.dark-theme) .glass {
+  background-color: rgba(255, 255, 255, 0.75) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(59, 130, 246, 0.15) !important;
+}
+
+/* Add subtle pulse animation to important elements */
+:root:not(.dark-theme) button.group {
+  position: relative;
+  overflow: hidden;
+}
+
+:root:not(.dark-theme) button.group::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent, rgba(124, 58, 237, 0.2), transparent);
+  animation: light-pulse 2s infinite;
+}
+
+@keyframes light-pulse {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
