@@ -10,13 +10,16 @@ dotenv.config();
 const app = express();
 
 // Enable CORS
-app.use(cors({
-  origin: true, // Allow all origins during development
+const corsOptions = {
+  // Use the env var from Render, or fallback to localhost for testing
+  origin: [
+    process.env.FRONTEND_URL, // Your Vercel URL
+    "http://localhost:5173"   // Local development
+  ],
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "Accept"]
-}));
-
+};
 // Increase payload size limit
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
