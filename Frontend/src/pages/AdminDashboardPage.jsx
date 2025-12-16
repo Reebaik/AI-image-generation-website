@@ -110,7 +110,7 @@ const AdminDashboardPage = () => {
       
       // Try a real request in the background
       try {
-        const response = await axios.get("http://localhost:5000/images/popular");
+        const response = await axios.get(`${backendUrl}/images/popular`);
         if (response.data && response.data.images && response.data.images.length > 0) {
           console.log("Successfully fetched real images:", response.data.images.length);
           setImages(response.data.images);
