@@ -25,6 +25,7 @@ const RegisterPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
   const navigate = useNavigate();
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     // Check if user has a preference stored
@@ -80,7 +81,7 @@ const RegisterPage = () => {
     }
 
     try {
-      await axios.post("http://localhost:5000/auth/register", {
+      await axios.post(`${backendUrl}/auth/register`, {
         username,
         email,
         password,
@@ -106,7 +107,7 @@ const RegisterPage = () => {
         });
 
         // Send user data to your backend
-        await axios.post("http://localhost:5000/auth/google-register", {
+        await axios.post(`${backendUrl}/auth/google-register`, {
           email: res.data.email,
           name: res.data.name,
           picture: res.data.picture,

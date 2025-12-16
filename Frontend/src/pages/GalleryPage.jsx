@@ -16,6 +16,7 @@ const GalleryPage = () => {
     const [darkMode, setDarkMode] = useState(true);
     const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
     const navigate = useNavigate();
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
     
     // Reference for share popup
     const sharePopupRef = useRef(null);
@@ -76,7 +77,7 @@ const GalleryPage = () => {
                     return;
                 }
 
-                const response = await fetch("http://localhost:5000/images/gallery", {
+                const response = await fetch(`${backendUrl}/images/gallery`, {
                     method: "GET",
                     headers: {
                         "Authorization": `Bearer ${token}`,
@@ -114,7 +115,7 @@ const GalleryPage = () => {
             
             console.log("Deleting image:", imageId);
             
-            const response = await fetch(`http://localhost:5000/images/delete/${imageId}`, {
+            const response = await fetch(`${backendUrl}/images/delete/${imageId}`, {
                 method: "DELETE",
                 headers: {
                     "Authorization": `Bearer ${token}`,

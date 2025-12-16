@@ -17,6 +17,7 @@ const LoginPage = () => {
   const [darkMode, setDarkMode] = useState(true);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     // Check if user has a preference stored
@@ -48,7 +49,7 @@ const LoginPage = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:5000/auth/login", {
+      const response = await axios.post(`${backendUrl}/auth/login`, {
         username,
         password,
         rememberMe
@@ -86,7 +87,7 @@ const LoginPage = () => {
         });
 
         // Send user data to your backend
-        const googleLoginResponse = await axios.post("http://localhost:5000/auth/google-login", {
+        const googleLoginResponse = await axios.post(`${backendUrl}/auth/google-login`, {
           email: res.data.email,
           name: res.data.name,
           picture: res.data.picture,

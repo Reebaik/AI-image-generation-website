@@ -32,6 +32,7 @@ const AdminDashboardPage = () => {
   const [error, setError] = useState({ users: null, images: null });
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   // Check if user is admin, redirect if not
   useEffect(() => {
@@ -48,7 +49,7 @@ const AdminDashboardPage = () => {
     setError(prev => ({ ...prev, users: null }));
     
     try {
-      const response = await axios.get("http://localhost:5000/admin/users", {
+      const response = await axios.get(`${backendUrl}/admin/users`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
@@ -146,7 +147,7 @@ const AdminDashboardPage = () => {
       console.log("Updating user role for ID:", userId);
       
       const response = await axios.put(
-        `http://localhost:5000/admin/users/${userId}/promote`,
+        `${backendUrl}/admin/users/${userId}/promote`,
         {},
         { headers: { Authorization: `Bearer ${token}` }}
       );
@@ -191,7 +192,7 @@ const AdminDashboardPage = () => {
       }
       
       const response = await axios.put(
-        `http://localhost:5000/admin/users/${userId}`, 
+        `${backendUrl}/admin/users/${userId}`, 
         {
           username: editForm.username,
           email: editForm.email,
@@ -230,7 +231,7 @@ const AdminDashboardPage = () => {
     }
     
     try {
-      await axios.delete(`http://localhost:5000/admin/users/${userId}`, {
+      await axios.delete(`${backendUrl}/admin/users/${userId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchUsers(); // Refresh user list
@@ -268,7 +269,7 @@ const AdminDashboardPage = () => {
     try {
       // Try the admin endpoint first
       await axios.patch(
-        `http://localhost:5000/admin/images/${imageId}/approve`,
+        `${backendUrl}/admin/images/${imageId}/approve`,
         {},
         { headers: { Authorization: `Bearer ${token}` }}
       );
@@ -280,7 +281,7 @@ const AdminDashboardPage = () => {
       try {
         // Try the regular images endpoint as fallback
         await axios.patch(
-          `http://localhost:5000/images/${imageId}/approve`, 
+          `${backendUrl}/images/${imageId}/approve`, 
           {},
           { headers: { Authorization: `Bearer ${token}` }}
         );
@@ -306,7 +307,7 @@ const AdminDashboardPage = () => {
     try {
       // Try the admin endpoint first
       await axios.delete(
-        `http://localhost:5000/admin/images/${imageId}`,
+        `${backendUrl}/admin/images/${imageId}`,
         { headers: { Authorization: `Bearer ${token}` }}
       );
       fetchImages(); // Refresh image list
@@ -317,7 +318,7 @@ const AdminDashboardPage = () => {
       try {
         // Try the regular images endpoint as fallback
         await axios.delete(
-          `http://localhost:5000/images/${imageId}`,
+          `${backendUrl}/images/${imageId}`,
           { headers: { Authorization: `Bearer ${token}` }}
         );
         fetchImages(); // Refresh image list

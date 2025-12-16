@@ -37,7 +37,7 @@ router.post("/generate", generateLimiter, async (req, res) => {
         
         try {
             const imageBlob = await hf.textToImage({
-                model: "stabilityai/stable-diffusion-3.5-large-turbo",
+                model: "stabilityai/stable-diffusion-xl-base-1.0",
                 inputs: prompt,
                 parameters: { 
                     num_inference_steps: inferenceSteps || 4,

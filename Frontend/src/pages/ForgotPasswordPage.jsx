@@ -11,6 +11,7 @@ const ForgotPasswordPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
   const navigate = useNavigate();
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     // Check if user has a preference stored
@@ -43,7 +44,7 @@ const ForgotPasswordPage = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:5000/auth/forgot-password", {
+      const response = await axios.post(`${backendUrl}/auth/forgot-password`, {
         email
       });
 

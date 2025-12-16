@@ -19,6 +19,7 @@ const ImageDetailPage = () => {
   const [likeInProgress, setLikeInProgress] = useState(false);
   const [showShareOptions, setShowShareOptions] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   
   const shareOptionsRef = useRef(null);
   
@@ -49,7 +50,7 @@ const ImageDetailPage = () => {
       const token = localStorage.getItem('token') || sessionStorage.getItem('token');
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
       
-      const response = await axios.get(`http://localhost:5000/images/${id}`, { headers });
+      const response = await axios.get(`${backendUrl}/images/${id}`, { headers });
       setImageData(response.data);
       setLiked(response.data.userHasLiked);
       setLikesCount(response.data.likesCount);
@@ -74,7 +75,7 @@ const ImageDetailPage = () => {
       if (liked) {
         // Unlike
         const response = await axios.post(
-          `http://localhost:5000/images/${id}/unlike`,
+          `${backendUrl}/images/${id}/unlike`,
           {},
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -83,7 +84,7 @@ const ImageDetailPage = () => {
       } else {
         // Like
         const response = await axios.post(
-          `http://localhost:5000/images/${id}/like`,
+          `${backendUrl}/images/${id}/like`,
           {},
           { headers: { Authorization: `Bearer ${token}` } }
         );

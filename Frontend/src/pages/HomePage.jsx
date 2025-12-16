@@ -25,6 +25,7 @@ const HomePage = () => {
   const [showBugReportModal, setShowBugReportModal] = useState(false);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const subscription = useSelector((state) => state.subscription.subscription);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   
   // Bug report state
   const [bugReport, setBugReport] = useState({
@@ -42,7 +43,7 @@ const HomePage = () => {
     const fetchPopularImages = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("http://localhost:5000/images/popular");
+        const response = await axios.get(`${backendUrl}/images/popular`);
         setPopularImages(response.data.images);
       } catch (err) {
         console.error("Error fetching popular images:", err);
@@ -175,7 +176,7 @@ const HomePage = () => {
       
       // Send the bug report to the backend with the correct Authorization header format
       const response = await axios.post(
-        "http://localhost:5000/auth/report-bug", 
+        `${backendUrl}/auth/report-bug`, 
         report,
         {
           headers: {

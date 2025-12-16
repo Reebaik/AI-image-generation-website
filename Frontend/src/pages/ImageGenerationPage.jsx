@@ -21,6 +21,7 @@ const ImageGenerationPage = () => {
   const [successMessage, setSuccessMessage] = useState(null);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [showShareOptions, setShowShareOptions] = useState(false);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   
   // Advanced settings
   const [inferenceSteps, setInferenceSteps] = useState(4);
@@ -120,7 +121,7 @@ const ImageGenerationPage = () => {
       }
 
       console.log("Sending request to generate image...");
-      const response = await fetch("http://localhost:5000/images/generate", {
+      const response = await fetch(`${backendUrl}/images/generate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -179,7 +180,7 @@ const ImageGenerationPage = () => {
       // Check if the image URL is a Cloudinary URL or base64
       const isBase64 = imageUrl.startsWith('data:image');
       
-      const response = await fetch("http://localhost:5000/images/save", {
+      const response = await fetch(`${backendUrl}/images/save`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

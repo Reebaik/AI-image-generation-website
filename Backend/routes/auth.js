@@ -6,8 +6,7 @@ const Subscription = require("../models/Subscription");
 const authMiddleware = require("../middleware/auth"); // Import middleware
 const PasswordResetToken = require("../models/PasswordResetToken");
 const sendEmail = require("../utils/sendEmail");
-const { v4: uuidv4 } = require("uuid");
-
+const crypto = require('crypto'); //
 
 const router = express.Router();
 
@@ -106,219 +105,164 @@ router.get("/protected", authMiddleware, (req, res) => {
 // Request Password Reset
 router.post("/forgot-password", async (req, res) => {
   const { email } = req.body;
-  const user = await User.findOne({ email });
-  if (!user) return res.status(404).json({ error: "User not found" });
 
-  // Generate a more secure token with higher entropy
-  const tokenBuffer = Buffer.from(
-    uuidv4() + Date.now().toString() + Math.random().toString() + user._id.toString()
-  ).toString('base64').replace(/[^a-zA-Z0-9]/g, '');
-  
-  // Take a portion of the token to keep it manageable but still secure
-  const token = tokenBuffer.substring(0, 64);
-  
-  const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
 
-  // Delete any existing tokens for this user
-  await PasswordResetToken.deleteMany({ userId: user._id });
-  
-  // Create new token
-  await PasswordResetToken.create({ userId: user._id, token, expiresAt });
+    // Generate Token
+    const token = crypto.randomBytes(32).toString("hex");
+    const expiresAt = Date.now() + 5 * 60 * 1000; // 5 minutes
 
-  const resetLink = `${process.env.FRONTEND_URL}/reset-password/${token}`;
-  console.log("Generated Reset Link:", resetLink);
-  console.log("Generated Token Length:", token.length);
-  
-  // Create beautiful HTML email template
-  const htmlEmail = `
+    // Save Token to DB
+    await new PasswordResetToken({
+      userId: user._id,
+      token,
+      expiresAt,
+    }).save();
+
+    // Create Link
+    // Note: Ensure process.env.FRONTEND_URL is set (e.g., https://your-vercel-app.app)
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password/${token}`;
+
+    // ✅ NEW TEMPLATE: Uses Tables for perfect alignment & Professional Styling
+    const htmlEmail = `
     <!DOCTYPE html>
     <html lang="en">
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Password Reset</title>
+      <title>Reset Your Password</title>
       <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
-        
-        body {
-          font-family: 'Roboto', Arial, sans-serif;
-          line-height: 1.6;
-          color: #333;
-          margin: 0;
-          padding: 0;
-          background-color: #f5f5f5;
-        }
-        .container {
-          max-width: 600px;
-          margin: 0 auto;
-          padding: 20px;
-          background-color: #ffffff;
-          border-radius: 8px;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-        }
-        .header {
-          background: linear-gradient(135deg, #dc2626, #991b1b);
-          color: white;
-          padding: 20px;
-          text-align: center;
-          border-radius: 8px 8px 0 0;
-          margin: -20px -20px 20px;
-        }
-        .logo {
-          font-size: 28px;
-          font-weight: 700;
-          margin-bottom: 5px;
-          color: white;
-        }
-        h1 {
-          color: #dc2626;
-          margin-top: 0;
-        }
-        .content {
-          padding: 20px 0;
-        }
-        .button {
-          display: inline-block;
-          background: linear-gradient(135deg, #dc2626, #991b1b);
-          color: white;
-          text-decoration: none;
-          padding: 12px 30px;
-          border-radius: 50px;
-          font-weight: 500;
-          margin: 20px 0;
-          text-align: center;
-          box-shadow: 0 4px 8px rgba(220, 38, 38, 0.25);
-          transition: all 0.3s ease;
-        }
-        .button:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 6px 12px rgba(220, 38, 38, 0.3);
-        }
-        .info {
-          background-color: #f8f9fa;
-          padding: 15px;
-          border-radius: 6px;
-          margin: 20px 0;
-          border-left: 4px solid #dc2626;
-        }
-        .footer {
-          text-align: center;
-          margin-top: 20px;
-          padding-top: 20px;
-          border-top: 1px solid #eee;
-          color: #666;
-          font-size: 12px;
-        }
-        .divider {
-          height: 1px;
-          background: linear-gradient(to right, transparent, rgba(220, 38, 38, 0.5), transparent);
-          margin: 20px 0;
-        }
-        .steps {
-          margin: 20px 0;
-        }
-        .step {
-          margin-bottom: 10px;
-          display: flex;
-          align-items: flex-start;
-        }
-        .step-number {
-          background-color: #dc2626;
-          color: white;
-          width: 24px;
-          height: 24px;
-          border-radius: 50%;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          margin-right: 10px;
-          flex-shrink: 0;
-          font-weight: bold;
-        }
-        .tip {
-          background-color: rgba(220, 38, 38, 0.05);
-          border: 1px solid rgba(220, 38, 38, 0.2);
-          border-radius: 6px;
-          padding: 10px 15px;
-          font-size: 14px;
-          margin: 15px 0;
-        }
-        .expiry {
-          font-size: 14px;
-          color: #666;
-          font-style: italic;
-        }
+        body { margin: 0; padding: 0; background-color: #f4f4f7; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .wrapper { width: 100%; table-layout: fixed; background-color: #f4f4f7; padding-bottom: 40px; }
+        .main-table { background-color: #ffffff; margin: 0 auto; width: 100%; max-width: 600px; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #e1e1e1; }
+        .header { background-color: #1e293b; padding: 25px; text-align: center; }
+        .header-title { color: #ffffff; font-size: 24px; font-weight: bold; margin: 0; letter-spacing: 1px; }
+        .content { padding: 40px; }
+        .btn { display: inline-block; background-color: #dc2626; color: #ffffff !important; text-decoration: none; padding: 14px 28px; border-radius: 6px; font-weight: bold; font-size: 16px; margin-top: 20px; text-align: center; }
+        .step-table { width: 100%; margin-top: 20px; margin-bottom: 20px; border-collapse: collapse; }
+        .step-circle { width: 32px; height: 32px; background-color: #fef2f2; color: #dc2626; border: 2px solid #dc2626; border-radius: 50%; text-align: center; line-height: 32px; font-weight: bold; display: block; margin: 0 auto; }
+        .step-text { font-size: 15px; color: #333; line-height: 1.5; padding-left: 15px; }
+        .footer { text-align: center; color: #9ca3af; font-size: 12px; padding: 20px; }
+        .divider { border-top: 1px solid #e5e7eb; margin: 25px 0; }
+        .expiry-box { background-color: #fff1f2; border-left: 4px solid #e11d48; padding: 15px; margin-top: 25px; font-size: 14px; color: #881337; }
       </style>
     </head>
     <body>
-      <div class="container">
-        <div class="header">
-          <div class="logo">Aura AI</div>
-          <p>AI Image Generation Platform</p>
-        </div>
-        
-        <div class="content">
-          <h1>Reset Your Password</h1>
-          <p>Hello ${user.username || 'there'},</p>
-          <p>We received a request to reset your password for your Aura AI account. Don't worry! We've got you covered.</p>
-          
-          <div class="divider"></div>
-          
-          <div class="steps">
-            <h3>Follow these simple steps:</h3>
-            <div class="step">
-              <div class="step-number">1</div>
-              <div>Click the "Reset Password" button below</div>
-            </div>
-            <div class="step">
-              <div class="step-number">2</div>
-              <div>Create a new secure password</div>
-            </div>
-            <div class="step">
-              <div class="step-number">3</div>
-              <div>Log in with your new password</div>
-            </div>
-          </div>
-          
-          <div style="text-align: center;">
-            <a href="${resetLink}" class="button">Reset Password</a>
-          </div>
-          
-          <div class="tip">
-            <strong>Tip:</strong> For security reasons, this password reset link will expire in 5 minutes.
-          </div>
-          
-          <div class="info">
-            <p>If you didn't request a password reset, please ignore this email or contact support if you have concerns about your account's security.</p>
-            <p class="expiry">This link expires on ${expiresAt.toLocaleString()}</p>
-          </div>
-          
-          <p>If the button above doesn't work, copy and paste the following URL into your browser:</p>
-          <p style="word-break: break-all; font-size: 14px; color: #666;">${resetLink}</p>
-        </div>
-        
-        <div class="divider"></div>
+      <div class="wrapper">
+        <br>
+        <table class="main-table" align="center" cellspacing="0" cellpadding="0">
+          <tr>
+            <td class="header">
+              <h1 class="header-title">Aura AI</h1>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="content">
+              <h2 style="color: #1e293b; margin-top: 0; font-size: 22px;">Reset Your Password</h2>
+              <p style="color: #4b5563; font-size: 16px; line-height: 1.6;">
+                Hello <strong>${user.username || 'there'}</strong>,<br><br>
+                We received a request to reset your password. If you didn't ask for this, you can safely ignore this email.
+              </p>
+
+              <div class="divider"></div>
+
+              <table class="step-table" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td width="40" valign="top"><div class="step-circle">1</div></td>
+                  <td valign="top" class="step-text"><strong>Click the button</strong> below to verify your identity.</td>
+                </tr>
+                <tr><td height="15" colspan="2"></td></tr>
+                <tr>
+                  <td width="40" valign="top"><div class="step-circle">2</div></td>
+                  <td valign="top" class="step-text"><strong>Create a new password</strong> on the secure page.</td>
+                </tr>
+                <tr><td height="15" colspan="2"></td></tr>
+                <tr>
+                  <td width="40" valign="top"><div class="step-circle">3</div></td>
+                  <td valign="top" class="step-text"><strong>Log back in</strong> and start generating images!</td>
+                </tr>
+              </table>
+
+              <div style="text-align: center; margin-top: 30px;">
+                <a href="${resetLink}" class="btn">Reset Password</a>
+              </div>
+              
+              <div class="expiry-box">
+                <strong>Note:</strong> This link expires in 5 minutes (at ${new Date(expiresAt).toLocaleTimeString()}).
+              </div>
+              
+              <p style="color: #9ca3af; font-size: 13px; margin-top: 30px;">
+                If the button doesn't work, copy this link:<br>
+                <a href="${resetLink}" style="color: #dc2626; word-break: break-all;">${resetLink}</a>
+              </p>
+            </td>
+          </tr>
+        </table>
         
         <div class="footer">
-          <p>© ${new Date().getFullYear()} Aura AI. All rights reserved.</p>
-          <p>This email was sent to ${email} because you requested a password reset.</p>
+          &copy; ${new Date().getFullYear()} Aura AI. All rights reserved.<br>
+          Sent to ${email}
         </div>
       </div>
     </body>
     </html>
-  `;
-  
-  await sendEmail(
-    email, 
-    "Aura AI - Reset Your Password", 
-    htmlEmail, 
-    {
-      priority: '1', // High priority for password reset emails
-      importance: 'high'
-    }
-  );
+    `;
 
-  res.json({ message: "Reset link sent to your email" });
+    // Send Email
+    await sendEmail(
+      email,
+      "Aura AI - Reset Your Password",
+      htmlEmail,
+      {
+        priority: '1',
+        importance: 'high'
+      }
+    );
+
+    res.json({ message: "Reset link sent to your email" });
+
+  } catch (error) {
+    console.error("Forgot Password Error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+// ==========================================
+// ROUTE 2: RESET PASSWORD (Updates the DB)
+// ==========================================
+router.post("/reset-password/:token", async (req, res) => {
+  const { token } = req.params;
+  const { newPassword } = req.body;
+
+  try {
+    const resetToken = await PasswordResetToken.findOne({ token });
+
+    // Check if token exists and hasn't expired
+    if (!resetToken || resetToken.expiresAt < Date.now()) {
+      return res.status(400).json({ error: "Invalid or expired token" });
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update User
+    await User.findByIdAndUpdate(resetToken.userId, { password: hashedPassword });
+
+    // Delete the token so it can't be used again
+    await PasswordResetToken.deleteOne({ token });
+
+    res.json({ message: "Password reset successful" });
+
+  } catch (error) {
+    console.error("Reset Password Error:", error);
+    res.status(500).json({ error: "Failed to reset password" });
+  }
 });
 
 // Reset Password
@@ -362,152 +306,98 @@ router.post("/report-bug", authMiddleware, async (req, res) => {
 
     // Create beautiful HTML email template for bug report
     const htmlEmail = `
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Bug Report</title>
-        <style>
-          @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bug Report - Aura AI</title>
+  <style>
+    /* Reset & Base Styles */
+    body { margin: 0; padding: 0; background-color: #f4f4f7; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-font-smoothing: antialiased; }
+    table { border-spacing: 0; width: 100%; }
+    td { padding: 0; }
+    img { border: 0; }
+    
+    /* Container */
+    .wrapper { width: 100%; table-layout: fixed; background-color: #f4f4f7; padding-bottom: 40px; }
+    .main-table { background-color: #ffffff; margin: 0 auto; width: 100%; max-width: 600px; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #e1e1e1; }
+    
+    /* Header */
+    .header { background-color: #1e293b; padding: 24px 30px; text-align: left; }
+    .brand { color: #ffffff; font-size: 20px; font-weight: 700; letter-spacing: 0.5px; text-decoration: none; }
+    .badge { background-color: #ef4444; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; float: right; text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    /* Content */
+    .content-cell { padding: 30px; }
+    .subject { margin: 0 0 20px; font-size: 22px; font-weight: 600; color: #111827; line-height: 1.3; }
+    
+    /* Metadata Grid */
+    .meta-table { width: 100%; margin-bottom: 25px; border-collapse: collapse; }
+    .meta-label { color: #6b7280; font-size: 12px; text-transform: uppercase; font-weight: 600; padding-bottom: 4px; width: 30%; }
+    .meta-value { color: #374151; font-size: 14px; font-weight: 500; padding-bottom: 16px; }
+    
+    /* Description Box */
+    .desc-container { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 20px; margin-top: 10px; }
+    .desc-label { font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 8px; display: block; text-transform: uppercase; }
+    .desc-text { font-family: 'Menlo', 'Monaco', 'Courier New', monospace; font-size: 13px; color: #334155; line-height: 1.6; white-space: pre-wrap; margin: 0; }
+    
+    /* Footer */
+    .footer { background-color: #f4f4f7; padding: 24px; text-align: center; }
+    .footer-text { color: #94a3b8; font-size: 12px; line-height: 1.5; margin: 0; }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <br>
+    <table class="main-table" align="center">
+      <tr>
+        <td class="header">
+          <span class="brand">Aura AI</span>
+          <span class="badge">Bug Report</span>
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="content-cell">
+          <h1 class="subject">${subject}</h1>
           
-          body {
-            font-family: 'Roboto', Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-          }
-          .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-          }
-          .header {
-            background: linear-gradient(135deg, #dc2626, #991b1b);
-            color: white;
-            padding: 20px;
-            text-align: center;
-            border-radius: 8px 8px 0 0;
-            margin: -20px -20px 20px;
-          }
-          .logo {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 5px;
-            color: white;
-          }
-          h1 {
-            color: #dc2626;
-            margin-top: 0;
-          }
-          .content {
-            padding: 20px 0;
-          }
-          .divider {
-            height: 1px;
-            background: linear-gradient(to right, transparent, rgba(220, 38, 38, 0.5), transparent);
-            margin: 20px 0;
-          }
-          .bug-details {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: 6px;
-            margin: 20px 0;
-            border-left: 4px solid #dc2626;
-          }
-          .footer {
-            text-align: center;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-            color: #666;
-            font-size: 12px;
-          }
-          .label {
-            font-weight: 600;
-            color: #dc2626;
-            margin-bottom: 5px;
-          }
-          .description-box {
-            background-color: #f8f9fa;
-            border: 1px solid #e9ecef;
-            border-radius: 6px;
-            padding: 15px;
-            margin-top: 5px;
-            white-space: pre-wrap;
-          }
-          .user-info {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-          }
-          .user-avatar {
-            width: 40px;
-            height: 40px;
-            background-color: #dc2626;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            margin-right: 10px;
-          }
-          .timestamp {
-            color: #666;
-            font-size: 14px;
-            font-style: italic;
-            text-align: right;
-            margin-top: 10px;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <div class="logo">Aura AI</div>
-            <p>Bug Report System</p>
+          <table class="meta-table">
+            <tr>
+              <td class="meta-label">Reported By</td>
+              <td class="meta-value">${userEmail}</td>
+            </tr>
+            <tr>
+              <td class="meta-label">Date Submitted</td>
+              <td class="meta-value">${new Date().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}</td>
+            </tr>
+            <tr>
+              <td class="meta-label">Ticket ID</td>
+              <td class="meta-value" style="font-family: monospace;">#${new Date().getTime().toString(36).toUpperCase()}</td>
+            </tr>
+          </table>
+
+          <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 0 0 25px 0;">
+
+          <div class="desc-container">
+            <span class="desc-label">Issue Description</span>
+            <pre class="desc-text">${description}</pre>
           </div>
           
-          <div class="content">
-            <h1>New Bug Report</h1>
-            
-            <div class="user-info">
-              <div class="user-avatar">${userEmail.charAt(0).toUpperCase()}</div>
-              <div>
-                <div style="font-weight: 500;">${userEmail}</div>
-                <div style="font-size: 14px; color: #666;">Reported on ${new Date().toLocaleString()}</div>
-              </div>
-            </div>
-            
-            <div class="bug-details">
-              <div class="label">Subject:</div>
-              <div style="font-size: 18px; font-weight: 500; margin-bottom: 15px;">${subject}</div>
-              
-              <div class="label">Description:</div>
-              <div class="description-box">${description.replace(/\n/g, '<br>')}</div>
-              
-              <div class="timestamp">
-                ID: ${new Date().getTime().toString(36).toUpperCase()}
-              </div>
-            </div>
-          </div>
-          
-          <div class="divider"></div>
-          
-          <div class="footer">
-            <p>© ${new Date().getFullYear()} Aura AI. All rights reserved.</p>
-            <p>This is an automated message from the Aura AI Bug Report System.</p>
-          </div>
-        </div>
-      </body>
-      </html>
-    `;
+        </td>
+      </tr>
+    </table>
+    
+    <div class="footer">
+      <p class="footer-text">
+        &copy; ${new Date().getFullYear()} Aura AI Systems.<br>
+        Automated Security & Performance Monitoring
+      </p>
+    </div>
+  </div>
+</body>
+</html>
+`;
 
     // Send the email
     try {
