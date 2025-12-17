@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 // Subscription plans configuration
 export const subscriptionPlans = {
   basic: {
@@ -52,7 +52,7 @@ export const initializePayment = async (plan, user, onSuccess) => {
   try {
     // Step 1: Create order on our server
     const orderResponse = await axios.post(
-      'http://localhost:5000/api/payment/create-order',
+      `${backendUrl}/api/payment/create-order`,
       {
         planId: plan.id,
         amount: plan.price * 100 // Convert to paise
@@ -80,7 +80,7 @@ export const initializePayment = async (plan, user, onSuccess) => {
       try {
         // Verify payment with our server
         const verifyResponse = await axios.post(
-          'http://localhost:5000/api/payment/verify',
+          `${backendUrl}/api/payment/verify`,
           {
             razorpay_payment_id: response.razorpay_payment_id,
             razorpay_order_id: response.razorpay_order_id,
@@ -266,9 +266,9 @@ export const checkSubscriptionStatus = async () => {
       console.log('No token found, user is not authenticated');
       return null;
     }
-
+    
     console.log('Checking subscription status with server...');
-    const response = await axios.get('http://localhost:5000/api/subscription/status', {
+    const response = await axios.get(`${backendUrl}/api/subscription/status`, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
@@ -297,7 +297,7 @@ export const cancelSubscription = async () => {
     }
 
     const response = await axios.post(
-      'http://localhost:5000/api/subscription/cancel',
+      `${backendUrl}/api/subscription/cancel`,
       {},
       {
         headers: {
