@@ -9,12 +9,13 @@ const ImageCard = ({ image, onLike, onDelete, isAdmin }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const [creator, setCreator] = useState(null);
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
     useEffect(() => {
         const fetchCreator = async () => {
             try {
                 const response = await fetch(
-                    `http://localhost:5000/api/users/${image.userId}`,
+                    `${backendUrl}/api/users/${image.userId}`,
                     {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`,

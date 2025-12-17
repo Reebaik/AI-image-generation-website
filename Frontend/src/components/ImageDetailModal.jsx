@@ -15,8 +15,10 @@ const ImageDetailModal = ({ isOpen, onClose, imageId }) => {
   const [showShareOptions, setShowShareOptions] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
   
+  
   const { isAuthenticated } = useSelector(state => state.auth);
   const shareOptionsRef = useRef(null);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   
   useEffect(() => {
     if (isOpen && imageId) {
@@ -52,7 +54,7 @@ const ImageDetailModal = ({ isOpen, onClose, imageId }) => {
       const token = localStorage.getItem('token') || sessionStorage.getItem('token');
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
       
-      const response = await axios.get(`http://localhost:5000/images/${imageId}`, { headers });
+      const response = await axios.get(`${backendUrl}/images/${imageId}`, { headers });
       setImageData(response.data);
       setLiked(response.data.userHasLiked);
       setLikesCount(response.data.likesCount);
@@ -77,7 +79,7 @@ const ImageDetailModal = ({ isOpen, onClose, imageId }) => {
       if (liked) {
         // Unlike the image
         const response = await axios.post(
-          `http://localhost:5000/images/${imageId}/unlike`,
+          `${backendUrl}/images/${imageId}/unlike`,
           {},
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -86,7 +88,7 @@ const ImageDetailModal = ({ isOpen, onClose, imageId }) => {
       } else {
         // Like the image
         const response = await axios.post(
-          `http://localhost:5000/images/${imageId}/like`,
+          `${backendUrl}/images/${imageId}/like`,
           {},
           { headers: { Authorization: `Bearer ${token}` } }
         );
